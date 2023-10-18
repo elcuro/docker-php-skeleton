@@ -1,0 +1,34 @@
+version: "3.8"
+
+services:
+
+    php:
+        build:
+            context: .
+            args:
+                APPUSER_ID: ${UID}
+        image: app-php
+        container_name: app_php
+        ports:
+            - 8000:8000
+        volumes:
+            - ./:/app:rw
+        depends_on:
+            - db
+
+    db:
+        build:
+            context: .docker/mariadb
+        restart: always
+        container_name: app_db
+        environment:
+            MARIADB_ROOT_PASSWORD: 123
+
+    adminer:
+        image: adminer
+        container_name: app_adminer
+        restart: always
+        ports:
+            - 8080:8080
+        depends_on:
+            - db
